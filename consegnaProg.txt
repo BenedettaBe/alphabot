@@ -1,0 +1,20 @@
+client = pc
+server = robot
+tipologia di socket TCP perché affidabile
+comunicazione client server con scopo di far muovere il robot
+
+richieste dal client al server: 
+	f"{command}|{value}"
+
+	command = comando
+	value = valore
+
+	comandi possibili: forward, backward, left, right
+
+risposte dal server al client: 
+	f"{status}|{phrase}"
+
+	status = spiega lo stato della richiesta
+	phrase = stringa che descrive l'azione o l'errore
+
+	status possibili = ok / error
