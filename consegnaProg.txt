@@ -1,7 +1,8 @@
 client = pc
 server = robot
 tipologia di socket TCP perché affidabile
-comunicazione client server con scopo di far muovere il robot
+comunicazione client-server con scopo di far muovere il robot
+mono-connessione
 
 richieste dal client al server: 
 	f"{command}|{value}"
