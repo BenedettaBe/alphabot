@@ -1,7 +1,7 @@
 import socket
 diz_command = {"forward" : "avanti", "backward" : "indietro", "left" : "sinistra", "right": "destra"} #lista di comandi
 
-MYADDRESS = ("192.168.1.135", 9090)
+MYADDRESS = ("192.168.1.130", 9090)
 BUFFER_SIZE = 4096
 
 def main():

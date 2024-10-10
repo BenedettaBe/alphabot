@@ -1,6 +1,6 @@
 import socket
 
-SERVER_ADDRESS = ("192.168.1.135", 9090)
+SERVER_ADDRESS = ("192.168.1.130", 9090)
 BUFFER_SIZE = 4096
 
 def main():
@@ -9,7 +9,7 @@ def main():
     comandi = {"1": "forward", "2": "backward", "3": "left", "4": "right"}
 
     while True:
-        inputCommand = input("Inserisci il numero corrispondente al comando: (1.forward 2.backward 3.left 4.right")
+        inputCommand = input("Inserisci il numero corrispondente al comando: (1.forward 2.backward 3.left 4.right) ")
         
         if inputCommand in comandi:
             command = comandi[inputCommand]
