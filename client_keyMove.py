@@ -8,25 +8,28 @@ def main():
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.connect(SERVER_ADDRESS)
     key_comandi = {"w": "forward"}
-    statoKey = {"w": True}
+    statoKey = {"w": False}
 
-    pressed = False
+    key = 'w'
 
     while True:
 
-        if libreriaPynput.on_press(): 
-            pressed = True
+        if libreriaPynput.on_press(key): 
+            statoKey[key] = True
          
-        elif libreriaPynput.on_release('w'): 
-            pressed = False
+        elif libreriaPynput.on_release(key): 
+            statoKey[key] = False
 
-            #message = f"{command}|{inputValue}"
+        if statoKey[key] == True: 
+            message = f"{key_comandi[key]}|{1}"
+        else:
+            message = f"{"stop"}|{1}"
             
         s.sendall(message.encode())
         message = s.recv(BUFFER_SIZE)
         print(f"Ricevuto <{message.decode()}> dal server")
 
-            
-    s.close()
+        
+        
 if __name__ == '__main__':
     main()
