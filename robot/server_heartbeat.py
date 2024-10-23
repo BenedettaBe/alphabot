@@ -1,3 +1,4 @@
+#INCOMPLETO: manca heart beat
 from AlphaBot import AlphaBot
 import socket
 import time
