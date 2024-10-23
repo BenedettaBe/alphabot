@@ -43,7 +43,6 @@ def main():
     start_listener()
     
     while True:
-
         message = s.recv(BUFFER_SIZE)
         print(f"Ricevuto <{message.decode()}> dal server")
 
