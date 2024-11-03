@@ -9,7 +9,7 @@ MYADDRESS = ("192.168.1.130", 9090)
 BUFFER_SIZE = 4096
 
 # dizionario per associare i comandi di movimento al valore dei motori
-key_comandi = {"forward": "1|1", "backward": "-1|-1", "left": "-1|1", "right": "1|-1", "stop": "0|0"}
+key_comandi = {"forward": "50|50", "backward": "-50|-50", "left": "-50|50", "right": "50|-50", "stop": "0|0"}
 
 def main():
     robot = AlphaBot()
@@ -37,7 +37,6 @@ def main():
         print(motor1, motor2)
         motor1 = int(motor1)
         motor2 = int(motor2)
-        
         # Imposto i motori del robot secondo i comandi ricevuti
         robot.setMotor(motor1, motor2)     
 

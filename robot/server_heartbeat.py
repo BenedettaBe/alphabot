@@ -1,7 +1,7 @@
 #INCOMPLETO: manca heart beat
 from AlphaBot import AlphaBot
 import socket
-import time
+import sqlite3
 
 MYADDRESS = ("192.168.1.130", 9090)
 BUFFER_SIZE = 4096
@@ -17,6 +17,17 @@ def main():
     motor1 = 0
     motor2 = 0
     robot.setMotor(motor1, motor2)
+
+    #connessione al database
+    conn = sqlite3.connect('mio_database_Benny.db')
+    cur = conn.cursor() # serve per far girare il database
+    query = '''SELECT P_K, str_mov
+        FROM comandi'''
+    print(query)
+    cur.execute(query)
+    conn.commit()
+    variabile_in_stampa = cur.fetchall()
+
 
     #connessione con il client
     connection, client_address = s.accept()
