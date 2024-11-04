@@ -33,10 +33,10 @@ def main():
         print(f"Messaggio ricevuto: {message}")
 
         # estraggo i valori per i motori dal dizionario key_comandi
-        motor1, motor2 = key_comandi[message].split('|')
-        print(motor1, motor2)
-        motor1 = int(motor1)
-        motor2 = int(motor2)
+        motor1value, motor2value = key_comandi[message].split('|')
+        print(motor1value, motor2value)
+        motor1 += int(motor1value)
+        motor2 += int(motor2value)
         # Imposto i motori del robot secondo i comandi ricevuti
         robot.setMotor(motor1, motor2)     
 

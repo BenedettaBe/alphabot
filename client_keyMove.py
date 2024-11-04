@@ -1,13 +1,30 @@
 import socket
 from pynput import keyboard
+from threading import Thread
+import time
+
 
 SERVER_ADDRESS = ("192.168.1.130", 9090)
+HEARTBEAT_ADDRESS = ("192.168.1.130", 9091)
+
 BUFFER_SIZE = 4096
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(SERVER_ADDRESS)
 key_comandi = {"w": "forward", "s" : "backward", "a" : "left", "d" : "right", "f" : "stop"}
 statoKey = {"w": False, "s": False, "a": False, "d": False, "f": False}
+
+def heartbeat_sender():
+    send_heartbeat= socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    send_heartbeat.connect(HEARTBEAT_ADDRESS)
+    while True:
+        try:
+            send_heartbeat.sendall("a".encode())
+            time.sleep(1)
+        except Exception as e:
+            print(f"Error: {e}")
+            break
+    send_heartbeat.close()
 
 # funzione chiamata quando un tasto viene premuto
 def on_press(key):
@@ -40,6 +57,8 @@ def start_listener():
         listener.join()
 
 def main():
+    t = Thread(target=heartbeat_sender)
+    t.start()
     start_listener()
     
     while True:

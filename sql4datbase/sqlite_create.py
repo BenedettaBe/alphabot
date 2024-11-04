@@ -1,7 +1,7 @@
 import sqlite3
 
 #connessione al database
-conn = sqlite3.connect('mio_database_Benny.db')
+conn = sqlite3.connect('mio_databaseB.db')
 cur = conn.cursor() # serve per far girare il database
 
 cur.execute('''CREATE TABLE comandi(

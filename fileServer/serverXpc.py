@@ -4,8 +4,6 @@ import time
 MYADDRESS = ("127.0.0.1", 9090)  # Modifica con il tuo indirizzo IP locale
 BUFFER_SIZE = 4096
 
-key_comandi = {"forward": "1|1", "backward": "-1|-1", "left": "-1|1", "right": "1|-1", "stop": "0|0"}
-
 # Funzioni simulate per comportarsi come il robot
 def setMotor(left, right):
     # Simuliamo la gestione dei motori stampando i valori dei motori
@@ -36,7 +34,8 @@ def main():
     print(f"Server in ascolto su {MYADDRESS}")
     connection, client_address = s.accept()
     print(f"Il client {client_address} si è connesso")
-
+    motor1 = 0
+    motor2 = 0
     while True:
         
             # Ricezione messaggi dal client
@@ -47,9 +46,10 @@ def main():
         print(f"Messaggio ricevuto: {message}")
 
             
-        motor1, motor2 = key_comandi[message].split('|')
-        motor1 = int(motor1)
-        motor2 = int(motor2)
+        motor1value, motor2value = message.split('|')
+        print(f"Potenza ricevuta: Sinistro = {motor1value}, Destro = {motor2value}")
+        motor1 = int(motor1value)
+        motor2 = int(motor2value)
           
 
         # Simula l'azione sui motori

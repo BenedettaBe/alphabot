@@ -1,13 +1,13 @@
 import sqlite3
 
 #connessione al database
-conn = sqlite3.connect('mio_database_Benny.db')
+conn = sqlite3.connect('mio_databaseB.db')
 cur = conn.cursor() # serve per far girare il database
 query = '''INSERT INTO comandi("P_K", "str_mov") VALUES
-            ("v", "f40,l20,f20"),
-            ("x", "f30,l40,f20"),
-            ("y", "f40,l60,f20"),
-            ("z", "f40,l80,f20");'''
+            ("v", "w4,d1,s3"),
+            ("x", "w3,a2"),
+            ("y", "s4,d1,w3"),
+            ("z", "s2,a2,s1");'''
 print(query)
 cur.execute(query)
 conn.commit()

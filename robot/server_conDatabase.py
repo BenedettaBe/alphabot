@@ -9,7 +9,14 @@ BUFFER_SIZE = 4096
 
 # Dizionario di traduzione per i comandi di movimento
 #key_comandi = {"w": "50|50", "s": "-50|-50", "d": "-50|50", "a": "50|-50", "f": "0|0"}
-key_comandi = {"w": "forward", "s" : "backward", "a" : "left", "d" : "right", "f" : "stop"}
+#key_comandi = {"w": "forward", "s" : "backward", "a" : "left", "d" : "right", "f" : "stop"}
+key_comandi = {
+    "w": (50, 50),     # Avanti
+    "s": (-50, -50),   # Indietro
+    "a": (-50, 50),    # Sinistra
+    "d": (50, -50),    # Destra
+    "f": (0, 0)        # Stop
+}
 
 
 def main():
@@ -24,6 +31,7 @@ def main():
     #connessione al database
     conn = sqlite3.connect('mio_database_Benny.db')
     cur = conn.cursor() # serve per far girare il database
+    
     #connessione con il client
     connection, client_address = s.accept()
     print(f"Il client {client_address} si è connesso")
@@ -39,8 +47,32 @@ def main():
     while True:
         tasto = connection.recv(BUFFER_SIZE).decode()
         print(f"Messaggio ricevuto: {tasto}")
+        
+        if tasto in key_comandi:
+            print(f"Sinistro = {motor1}, Destro = {motor2}")
+            if tasto == 'f':
+                motor1 = 0
+                motor2 = 0
+            else:
+                left_power, right_power = key_comandi[tasto]
+                motor1 += left_power
+                motor2 += right_power
+                if motor1 > 100:
+                    motor1 = 100
+                elif motor1 < -100:
+                    motor1 = 0
+                if motor2 > 100:
+                    motor2 = 100
+                elif motor2 < -100:
+                    motor2 = 0
 
-        if variabile_in_stampa:
+            robot.setMotor(motor1, motor2)
+
+
+        elif variabile_in_stampa:
+            query = f'''SELECT str_mov
+                    FROM comandi
+                    WHERE comandi.P_K = "{tasto}"'''
             cur.execute(query)
             risposta = cur.fetchall()
             print(f"risposta: {risposta}")
@@ -48,14 +80,17 @@ def main():
             print(f"risp: {risp}")
             comando = risp[0]
             print(f"comando: {comando}")
-            list_comandi = comando.split(",")
+            list_comandi = risp.split(",")
             print(f"lista comandi: {list_comandi}")
-            for c in list_comandi:
-                movimento = key_comandi[c[0]]
-                robot.movimento
-                time.sleep(c[1:])
-                print(c[0])#lettera
-                print(c[1:]) #movimento
+
+            for comando in list_comandi:
+                movimento = comando[0]
+                durata = float(comando[1:])
+                motor1, motor2 = key_comandi[movimento]
+                robot.setMotor(motor1, motor2)
+                time.sleep(durata)
+
+                #motor1, motor2 = key_comandi[message]
             
 
         #motor1, motor2 = key_comandi[message].split('|')

@@ -1,7 +1,7 @@
 import sqlite3
 
 #connessione al database
-conn = sqlite3.connect('mio_database_Benny.db')
+conn = sqlite3.connect('mio_databaseB.db')
 cur = conn.cursor() # serve per far girare il database
 query = '''SELECT *
     FROM comandi'''
@@ -10,7 +10,7 @@ cur.execute(query)
 conn.commit()
 variabile_in_stampa = cur.fetchall()
 print(variabile_in_stampa)
-tasto = 'v'
+tasto = 'x'
 if variabile_in_stampa:
     query = f'''SELECT str_mov
     FROM comandi
