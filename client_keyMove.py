@@ -34,7 +34,8 @@ def on_press(key):
         statoKey[key.char] = True
         print("premuto")
     if statoKey[key.char] == True:
-        message = f"{key_comandi[key.char]}|{1}"
+        message = key.char
+        #message = f"{key_comandi[key.char]}|{1}"
         s.sendall(message.encode())
         print("Inviato")
     #else:
@@ -46,7 +47,9 @@ def on_release(key):
     if statoKey[key.char] == True:
         statoKey[key.char] = False
         print("rilasciato")
-        message = f"{'stop'}|{1}"
+        message = 'f'
+
+        #message = f"{'stop'}|{1}"
         s.sendall(message.encode())
         print("inviato")
     #else:

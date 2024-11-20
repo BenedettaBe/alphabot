@@ -12,7 +12,7 @@ BUFFER_SIZE = 4096
 
 # dizionario per associare i tasti ai comandi di movimento
 key_comandi = {
-    "w": (50, 50),     # Avanti
+    "w": (-50, 50),     # Avanti
     "s": (-50, -50),   # Indietro
     "a": (-50, 50),    # Sinistra
     "d": (50, -50),    # Destra
@@ -58,11 +58,11 @@ def main():
                 if motor1 > 100:
                     motor1 = 100
                 elif motor1 < -100:
-                    motor1 = 0
+                    motor1 = -100
                 if motor2 > 100:
                     motor2 = 100
                 elif motor2 < -100:
-                    motor2 = 0
+                    motor2 = -100
         
         # Imposto i motori del robot secondo i comandi ricevuti
         robot.setMotor(motor1, motor2)     

