@@ -9,112 +9,100 @@ import time
 
 
 
-# indirizzo ip e porta del server
-SERVER_ADDRESS = ("192.168.1.130", 9090)
-HEARTBEAT_ADDRESS = ("192.168.1.130", 9091) 
-stop_heartbeat = False
-#SERVER_ADDRESS = ("127.0.0.1", 9090) # Indirizzo di loopback per testare localmente
+# Indirizzo IP e porta del server per la comunicazione con il robot e l'heartbeat
+#SERVER_ADDRESS = ("192.168.1.130", 9090)
+#HEARTBEAT_ADDRESS = ("192.168.1.130", 9091) 
+
+# Indirizzo IP e porta di loopback per testare localmente
+SERVER_ADDRESS = ("127.0.0.1", 9090) 
+HEARTBEAT_ADDRESS = ("127.0.0.1", 9091) 
 
 BUFFER_SIZE = 4096
 
-# creazione socket e connessione
+stop_heartbeat = False # Per gestire l'invio dei thread heartbeat
+
+# creazione socket e connessione al server
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.connect(SERVER_ADDRESS)
 
-# dizionario per associare i tasti ai comandi di movimento
-key_comandi = {"w": "forward", "s" : "backward", "a" : "left", "d" : "right", "f" : "stop"}
-
-# stato dei tasti: True se il tasto è premuto
-#statoKey = {"w": False, "s": False, "a": False, "d": False, "f": False}
-message = "stop" # messaggio predefinito per fermare il robot
-statoKey = {}
+# lista per tracciare lo stato dei tasti e i comandi corrispondenti
+listaPremuti = []
 
 
-def heartbeat_send(): #funzione per il controllo della comunicazione con il server
+def heartbeat_send():
+    """
+    Funzione che invia continuamente un messaggio di 'heartbeat' al server per 
+    mantenere attiva la connessione. Se il server non riceve heartbeat chiude la connessione.
+    """
     global stop_heartbeat
     send_heartbeat = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     send_heartbeat.connect(HEARTBEAT_ADDRESS)
+    
     while not stop_heartbeat:
         try:
-            #invio continuo del messaggio per tenere la connessione attiva
+            # invio continuo del messaggio per tenere la connessione attiva
             send_heartbeat.sendall("heartbeat".encode())
             #print("Heartbeat inviato.")    
-            time.sleep(1)
+            time.sleep(1) # attende 1 secondo prima di inviare il prossimo heartbeat
         except Exception as e:
-            #se c'è un errore blocca tutto
+            # se c'è un errore interrompe la comunicazione
             print(f"Errore nel thread heartbeat: {e}")
             break
     
-    send_heartbeat.close()
+    send_heartbeat.close() # chiusura del socket heartbeat
     print("Connessione heartbeat chiusa.")
 
 
-# funzione chiamata quando un tasto viene premuto
 def on_press(key):
+    '''    
+    funzione chiamata quando un tasto viene premuto
+    Invia il tasto al server con un messaggio "P|{tasto}" 
+    con 'P' il server comprende che il tasto è premuto
+    '''    
     tasto = key.char
-    if tasto not in statoKey:
-        statoKey[tasto] = True
-        print("pressione")
-        message = f"P|{tasto}"
-        s.sendall(message.encode())
-    elif statoKey[tasto] == False:
-        statoKey[tasto] = True
-        message = f"P|{tasto}"
-        s.sendall(message.encode())
+    # controllo che il tasto non sia ancora nella lista premuti
+    # così da mandare al server il messaggio una singola volta
+    if tasto not in listaPremuti:
+        #print("pressione")
+        listaPremuti.append(tasto) # aggiunta del tasto nella lista
+        message = f"P|{tasto}" # creazione messaggio predefinito
+        s.sendall(message.encode()) # invio messaggio al server
 
-       
-
-    '''
-    if tasto in key_comandi: # controlla se il tasto premuto è in key_comandi
-        # se il tasto non era premuto aggiorna il suo stato
-        if statoKey[tasto] == False:
-            statoKey[tasto] = True
-
-        if statoKey[tasto] == True:
-            print(f"{tasto} premuto")
-            # invio del comando per il movimento al server
-            s.sendall(f"{tastoencode())
-            print("Inviato")
-    else:
-        print("errore con il tasto")
-'''
-# funzione chiamata quando un tasto viene rilasciato
 def on_release(key):
+    '''    
+    funzione chiamata quando un tasto viene rilasciato
+    Invia il tasto al server con un messaggio del tipo "R|{tasto}" 
+    con 'R' il server comprende che il tasto è rilasciato
+    ''' 
     tasto = key.char
     print(tasto)
-    if tasto in statoKey and statoKey[tasto]:
-        statoKey[tasto] = False
-        message = f"R|{tasto}"
-        s.sendall(message.encode())
 
-    '''if tasto in key_comandi:
-        # se il tasto non era rilasciatp aggiorna il suo stato
-        if statoKey[tasto] == True:x
-            statoKey[tasto] = False
-            print(f"{tasto} rilasciato")
-            # invio del comando di stop al server
-            s.sendall(message.encode())
-            print("inviato")
-'''
-# funzione per avviare il listener della tastiera
+    # controllo che il tasto sia ancora nella lista premuti
+    # così da mandare al server il messaggio una singola volta
+    if tasto in listaPremuti:
+        listaPremuti.remove(tasto) # rimozione del tasto nella lista
+        message = f"R|{tasto}" # creazione messaggio predefinito
+        s.sendall(message.encode()) # invio messaggio al server
+        
+
 def start_listener():
+    '''
+    funzione per avviare il listener della tastiera
+    '''
     with keyboard.Listener(on_press=on_press, on_release=on_release) as listener:
         listener.join()
 
 def main():
     global stop_heartbeat 
-    t = Thread(target=heartbeat_send) #thread per controllo temporaneo sull'heartbeat
-    t.start()   #parte il thread
-    try:
-        start_listener()  # Ascolta la tastiera
-    except KeyboardInterrupt:
-        print("Interruzione del client.")
-    finally:
-        # Quando il client termina, ferma l'heartbeat e chiudi la connessione
-        stop_heartbeat = True
-        t.join()
-        s.close()  # Chiudi la connessione del socket
-        print("Client terminato.")
+    t = Thread(target=heartbeat_send) # thread per controllo sull'heartbeat
+    t.start() # avvio thread heartbeat
+
+    start_listener()  # avvio ascolto la tastiera
+    
+    stop_heartbeat = True # ferma l'invio di heartbeat
+    t.join()  # attende la chiusura del thread
+    s.close()  # chiusura della connessione del socket
+    print("Client terminato.")
         
 if __name__ == '__main__':
     main()
