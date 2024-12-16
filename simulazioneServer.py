@@ -136,6 +136,7 @@ def main():
                         WHERE P_K = "{tasto}"'''
                 cur.execute(query)
                 result = cur.fetchall()
+                print(result)
                 if result:
                     comando = result[0][0]
                     print(f"comando: {comando}")

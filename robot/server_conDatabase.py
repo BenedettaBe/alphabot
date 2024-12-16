@@ -12,7 +12,7 @@ BUFFER_SIZE = 4096
 def heartbeat_recive(heartbeat, robot):
     
     #setta un timer di 2 secondi sul socket
-    heartbeat.settimeout(2)
+    heartbeat.settimeout(10)
     
     #controlla che non ci siano problemi nella connessione
     try:
@@ -33,7 +33,7 @@ def heartbeat_recive(heartbeat, robot):
             #eccezione nel caso in cui il timer di 2 secondi sul socket scade prima che riceva un messaggio
             except socket.timeout:
                 print("Timeout del heartbeat. Fermare il robot.")
-                robot.stop()	#ferma i motori così si evita che continui ad andare avanti all'infinito
+                robot.setMotor(0, 0)	#ferma i motori così si evita che continui ad andare avanti all'infinito
                 
             #eccezione nel caso di un errore nella comunicazione
             except Exception as e:
@@ -47,10 +47,10 @@ def heartbeat_recive(heartbeat, robot):
 def main():
     # mappatura dei tasti alle azioni (movimenti) del robot
     key_comandi = {
-    "w": (25, 25),     # Avanti
-    "s": (-25, -25),   # Indietro
-    "a": (25, 0),    # Sinistra
-    "d": (0, 25),    # Destra
+    "w": (30, 30),     # Avanti
+    "s": (-30, -30),   # Indietro
+    "a": (30, 0),    # Sinistra
+    "d": (0, 30),    # Destra
     "f": (0, 0)        # Stop
     }
     listaPremuti = [] # lista per tenere traccia dei tasti premuti
@@ -63,7 +63,7 @@ def main():
 
     robot.stop() # ferma il robot per sicurezza
 
-    #crea il collegamento tramite socket tra pc e alphabot per il controllo della connessione.
+    # crea il collegamento tramite socket tra pc e alphabot per il controllo della connessione.
     heartbeat_recived = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     heartbeat_recived.bind(HEART_BEAT_ADDRESS)
     heartbeat_recived.listen(1)
@@ -96,23 +96,32 @@ def main():
         messaggio = connection.recv(BUFFER_SIZE).decode()
         if not messaggio: # se il messaggio è vuoto, blocca la comunicazione
             break 
-
-        stato, tasto = messaggio.split('|') # Divide il messaggio in stato (P o R) e tasto
+        print(messaggio)
+        lista = messaggio.split('|') # Divide il messaggio in stato (P o R) e tasto
         #print(f"Messaggio ricevuto: {stato} | {tasto}")
         
+        stato = lista[0]
+        tasto = lista[1][0]
+
         # se il tasto è vuoto, interrompe l'esecuzione
         if tasto == "":
             break
 
         # aggiunge o rimuove il tasto dalla lista dei tasti premuti
-        if stato == "P":
+        if stato == "P" and tasto not in listaPremuti:
             listaPremuti.append(tasto)
-        elif stato == "R":
+        elif stato == "R" and tasto in listaPremuti:
             listaPremuti.remove(tasto)
                 
+        print(listaPremuti)
         motor1, motor2 = 0,0
         for t in listaPremuti:
+            print(f"{listaPremuti}")
+            print(f"motor1={motor1}, motor2={motor2}")
+
             if t == 'f':
+                for i in listaPremuti:
+                    listaPremuti.remove(i)
                 robot.setMotor(0, 0)
 
             elif t in key_comandi:
@@ -154,6 +163,7 @@ def main():
                         #print(motor1, motor2)
                         robot.setMotor(motor1, motor2) 
                         time.sleep(durata)
+        robot.setMotor(motor1, motor2)
      
 
 if __name__ == '__main__':
