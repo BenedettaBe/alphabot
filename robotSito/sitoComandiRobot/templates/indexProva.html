@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ALPHABOT 02</title>
+    <link rel="stylesheet" href="styleProva.css">
+</head>
+<body>
+    <div class="header">
+        <img src="img/Alphabot.png" alt="Logo" class="logo">
+        <h1>ALPHABOT 02</h1>
+        <button class="login" onclick="openLoginModal()">ACCEDI</button> <!--apre il form di accesso-->
+    </div>
+
+    <div class="login-modal" id="loginModal">
+        <h3>Login</h3>
+        <input type="text" id="username" placeholder="Username">
+        <input type="password" id="password" placeholder="Password">
+        <button onclick="authenticate()">Login</button> <!--se corretti, permette l'accesso ai comandi del robot-->
+    </div>
+
+    <div class="robot-controls" id="robotControls">
+        <h3>COMANDA IL ROBOT TRAMITE L'UTILIZZO DEI SEGUENTI TASTI:</h3>
+        
+        <form method="post" action="/">
+            <input type="submit" value="W" name="W"><br>
+            <input type="submit" value="A" name="A">
+            <input type="submit" value="S" name="S">
+            <input type="submit" value="D" name="D"><br>
+            <input type="submit" value="STOP" name="STOP">
+        </form>
+        <!--<h2>LEGENDA:</h2><br>
+        w: avanti<br>
+        a: sinsitra<br>
+        s: indietro<br>
+        d: destra<br>
+        stop: interrompe il comando selezionato a ripetizione <br>-->
+       
+    </div>
+
+    <script>
+        function openLoginModal() { /*apre il form di accesso*/
+            document.getElementById('loginModal').style.display = 'flex';
+        }
+
+        function authenticate() { /*controlla l'inserimento di username e psw per procedere o meno*/
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'admin' && password === 'password') { /*se corretti mostra i comandi per il robot*/
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('robotControls').style.display = 'block';
+            } else {
+                alert('Credenziali non valide! Riprova...');
+            }
+        }
+    </script>
+</body>
+</html>

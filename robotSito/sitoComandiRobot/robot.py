@@ -25,9 +25,5 @@ def index():
     
     return render_template("index.html")
 
-def login():
-    if request.method == 'POST':
-        username = request.form['e-mail']
-
 if __name__ == '__main__':
     app.run(debug=True, host='192.168.1.130')
