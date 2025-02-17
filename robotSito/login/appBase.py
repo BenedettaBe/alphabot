@@ -50,8 +50,6 @@ def login():
 
         if check_account(username, password):
             print("Login riuscito")
-            response = make_response(redirect(url_for("home")))
-            response.
             return redirect(url_for('home'))
         else:
             print("Login fallito - Credenziali errate")

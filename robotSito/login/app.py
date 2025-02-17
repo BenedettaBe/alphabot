@@ -7,7 +7,7 @@ app = Flask(__name__)
 #robot = AlphaBot()
 
 def data():
-    con = sqlite3.connect('databaseLogin.db')
+    con = sqlite3.connect('./databaseLogin.db')
     cur = con.cursor()
     cur.execute("SELECT * FROM utenti")
     variabili = cur.fetchall()  
@@ -54,16 +54,23 @@ def check_account(username, password):
 def aggiungi_utente(username, password):
     hashed_password = generate_password_hash(password)
     acc = data()
+    print(acc)
     if username not in acc:
         con = sqlite3.connect('./databaseLogin.db')
         cur = con.cursor()
         cur.execute("INSERT INTO utenti (username, password) VALUES (?, ?)", (username, hashed_password))
         con.commit()
         con.close()
+        return True
+    return False
+
     
 
 @app.route("/")
 def index():
+    username = request.cookies.get("username")
+    if username:
+        return redirect(url_for('home'))
     return redirect(url_for('login'))
 
 
@@ -72,8 +79,8 @@ def login():
     if request.method == 'POST':
         username = request.form['e-mail']
         password = request.form['password']
-        print("Username ricevuto:", username)
-        print("Password ricevuta:", password)
+        #print("Username ricevuto:", username)
+        #print("Password ricevuta:", password)
 
         if check_account(username, password):
             print("Login riuscito")
@@ -82,7 +89,7 @@ def login():
             return response
         else:
             print("Login fallito - Credenziali errate")
-            return render_template("login.html", error="Invalid username or password")
+            return render_template("login.html", alert="Invalid username or password")
     return render_template("login.html")
 
 
@@ -92,9 +99,12 @@ def create_account():
         username = request.form['e-mail']
         password = request.form['password']
         
-        aggiungi_utente(username, password)
-        return redirect(url_for('login'))
-    
+        if aggiungi_utente(username, password):
+            return redirect(url_for('login'))
+
+        else:
+            return render_template("create_account.html", alert="username presente")
+
     return render_template("create_account.html")
 
 
@@ -103,12 +113,14 @@ def home():
     return render_template("movimenti.html")
 
 
-@app.route("/logout", methods=['GET', 'POST'])
+@app.route("/logout")
 def logout():
-    return redirect(url_for('login'))
+    response = make_response(redirect(url_for('login')))
+    response.delete_cookie("username")
+    return response
 
 
-@app.route("/movimenti", methods=['GET', 'POST'])
+@app.route("/movimenti", methods=['POST'])
 def movimenti():
     if request.method == 'POST':
         if request.form.get('W') == 'W':
@@ -128,9 +140,6 @@ def movimenti():
             #robot.stop()
         else:
             print("Unknown")
-    elif request.method == 'GET':
-        return render_template('movimenti.html')
-    
     return render_template("movimenti.html")
 
 if __name__ == '__main__':

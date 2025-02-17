@@ -20,7 +20,7 @@
 
 
     <form action="/create_account" method="POST">
-        <h3>Login Here</h3>
+        <h3>Create Here</h3>
 
         <label for="username">Username</label>
         <input type="email" placeholder="Email" id="e-mail" name="e-mail" required>
@@ -39,6 +39,12 @@
     <a href="/login" class="login">
         <button type="button" class="login">Login</button>
     </a>
+
+    {% if alert %}
+    <script>
+        alert("{{ alert }}");
+    </script>
+    {% endif %}
 
 </body>
 

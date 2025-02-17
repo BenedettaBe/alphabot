@@ -1,6 +1,4 @@
-*,
-*:before,
-*:after {
+* , *:before, *:after {
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -27,16 +25,13 @@ body {
 }
 
 .shape:first-child {
-  background: linear-gradient(#1845ad,
-      #23a2f6);
+  background: linear-gradient(#1845ad, #23a2f6);
   left: -80px;
   top: -80px;
 }
 
 .shape:last-child {
-  background: linear-gradient(to right,
-      #ff512f,
-      #f09819);
+  background: linear-gradient(to right, #ff512f, #f09819);
   right: -30px;
   bottom: -80px;
 }
@@ -135,32 +130,44 @@ button {
 
 .create-account {
   position: absolute;
-  /* Posizionamento rispetto alla finestra */
   bottom: 10px;
-  /* Distanza dal bordo inferiore */
   left: 50%;
-  /* Centra rispetto alla finestra */
   transform: translateX(-50%);
-  /* Corregge il centro */
   width: 400px;
-  /* Stessa larghezza del form */
   background-color: #ffffff;
-  /* Colore di sfondo */
   color: #080710;
-  /* Colore del testo */
   font-size: 16px;
-  /* Dimensione del testo */
   padding: 15px 0;
-  /* Altezza del pulsante */
   border-radius: 5px;
-  /* Angoli arrotondati */
   border: none;
-  /* Rimuove il bordo */
   cursor: pointer;
-  /* Cambia il puntatore */
 }
 
 .create-account:hover {
   background-color: rgba(255, 255, 255, 0.8);
-  /* Cambia colore al passaggio */
+}
+
+/* Stile per i movimenti */
+form input[type="submit"] {
+  height: 50px;
+  width: 100px;
+  background-color: #444;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  transition: 0.2s;
+}
+
+form input[type="submit"]:hover {
+  background-color: #666;
+}
+
+form input[type="submit"]:active {
+  background-color: #222;
+}
+
+form div {
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 10px;
 }
