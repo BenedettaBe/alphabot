@@ -5,10 +5,9 @@
     <!-- Design by foolishdeveloper.com -->
     <title>Login Tutorial</title>
 
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com"> -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
-    <!--Stylesheet-->
+    <!-- Stylesheet -->
     <link rel="stylesheet" type="text/css" href="../static/style.css">
 </head>
 
@@ -19,17 +18,24 @@
     </div>
 
     <h3>COMANDA IL ROBOT TRAMITE I SEGUENTI TASTI: </h3>
-    <form method="post" action="/movimenti">
-        <input type="submit" value="W" name = "W"></input><br><br>
-        <input type="submit" value="A" name = "A"></input>
-        <input type="submit" value="S" name = "S"></input>
-        <input type="submit" value="D" name = "D"></input><br><br>
-        <input type="submit" value="STOP" name = "STOP"></input>
-    </form>
 
     <a href="/logout" class="create-account-link">
         <button type="button" class="logout">logout</button>
     </a>
+
+    <form action="/movimenti" method="POST" class="movement-form">
+        <div class="control-buttons">
+            <input type="submit" value="W" name="W" class="move-btn">
+        </div>
+        <div class="control-buttons">
+            <input type="submit" value="A" name="A" class="move-btn">
+            <input type="submit" value="S" name="S" class="move-btn">
+            <input type="submit" value="D" name="D" class="move-btn">
+        </div>
+        <div class="control-buttons">
+            <input type="submit" value="STOP" name="STOP" class="stop-btn">
+        </div>
+    </form>
 
 </body>
 

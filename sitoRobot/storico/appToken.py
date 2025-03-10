@@ -8,6 +8,7 @@ import datetime
 SECRET_KEY = ("mysecretkey")
 app = Flask(__name__)
 robot = AlphaBot()
+robot.stop()
 
 def data():
     con = sqlite3.connect('./databaseLogin.db')
@@ -29,20 +30,6 @@ def initialize_db():
     ''')
     con.commit()
     con.close()
-
-def debug_db():
-    con = sqlite3.connect('databaseLogin.db')
-    cur = con.cursor()
-    cur.execute("SELECT name FROM sqlite_master WHERE type='table';")
-    print("Tabelle presenti:", cur.fetchall())
-
-    try:
-        cur.execute("PRAGMA table_info(utenti);")
-        print("Schema della tabella utenti:", cur.fetchall())
-    except sqlite3.OperationalError as e:
-        print("Errore:", e)
-
-    con.close()
     
 def check_account(username, password):
     acc = data()  
@@ -57,7 +44,7 @@ def check_account(username, password):
 def aggiungi_utente(username, password):
     hashed_password = generate_password_hash(password)
     acc = data()
-    print(acc)
+    #print(acc)
     if username not in acc:
         con = sqlite3.connect('./databaseLogin.db')
         cur = con.cursor()
@@ -77,7 +64,7 @@ def index():
     return redirect(url_for('login'))
 
 
-@app.route("/login", methods=['GET', 'POST'])
+@app.route("/login", methods=['POST', 'GET'])
 def login():
     if request.method == 'POST':
         username = request.form['e-mail']
@@ -92,7 +79,6 @@ def login():
             response = make_response(redirect(url_for('home')))
             response.set_cookie("username", token,httponly=True, samesite="Strict", max_age=60*60*24)
             print(f"token: {token}")
-
             return response
         else:
             print("Login fallito - Credenziali errate")
@@ -133,29 +119,31 @@ def logout():
     return response
 
 
-@app.route("/movimenti", methods=['POST'])
+@app.route("/movimenti", methods=['POST', 'GET'])
 def movimenti():
-    if request.method == 'POST':
-        if request.form.get('W') == 'W':
-            print("avanti")
-            robot.forward()
-        elif  request.form.get('S') == 'S':
-            print("indietro")
-            robot.backward()
-        elif request.form.get('A') == 'A':
-            print("sinistra")
-            robot.left()
-        elif  request.form.get('D') == 'D':
-            print("destra")
-            robot.right()
-        elif  request.form.get('STOP') == 'STOP':
-            print("stop")
-            robot.stop()
-        else:
-            print("Unknown")
-    return render_template("movimenti.html")
+    user_token = request.cookies.get("username")
+    if not user_token:
+        return redirect(url_for('login'))
+    else:
+        if request.method == 'POST':
+            if request.form.get('W') == 'W':
+                print("avanti")
+                robot.forward()
+            elif  request.form.get('S') == 'S':
+                print("indietro")
+                robot.backward()
+            elif request.form.get('A') == 'A':
+                print("sinistra")
+                robot.left()
+            elif  request.form.get('D') == 'D':
+                print("destra")
+                robot.right()
+            elif  request.form.get('STOP') == 'STOP':
+                print("stop")
+                robot.stop()
+            else:
+                print("Unknown")
+        return render_template("movimenti.html")
 
 if __name__ == '__main__':
     app.run(debug=True, host = '0.0.0.0')
-
-    
