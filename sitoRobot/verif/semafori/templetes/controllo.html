@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Configurazione - Semaforo</title>
+</head>
+
+<body>
+    <h2>Configurazione Semaforo</h2>
+
+    <form method="POST" action="/controllo">
+        <label for="rosso">Durata Rosso (s):</label>
+        <input type="text" id="rosso" name="rosso" value="2" required><br>
+
+        <label for="verde">Durata Verde (s):</label>
+        <input type="text" id="verde" name="verde" value="2" required><br>
+
+        <label for="giallo">Durata Giallo (s):</label>
+        <input type="text" id="giallo" name="giallo" value="1" required><br>
+
+        <button type="submit" name="buttone" value="salva">Salva configurazioni</button>        
+        <button type="submit" name="buttone" value="spegni">Spegni Semaforo</button>
+        <button type="submit" name="buttone" value="attiva">Riattiva Semaforo</button>
+    </form>
+
+    <a href="/test">Esegui Test</a>
+</body>
+
+</html>

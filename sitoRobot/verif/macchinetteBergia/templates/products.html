@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="it">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Elenco Prodotti</title>
+</head>
+
+<body>
+  <h1>Prodotti Disponibili</h1>
+  Soldi caricati: <form action="index" method="POST">
+    <input type="text" name="quantity" value="1">
+    <ul>
+      {% for id, details in products.items() %}
+      <li>
+        <strong>ID: {{ id }}</strong> - {{ details['name'] }} - Prezzo: €{{ details['price'] }} - Disponibilità: {{ details['stock'] }}
+        <button type="submit" name="product_id" value="{{ id }}" id="btn-{{ id }}">Acquista</button>
+      </li>
+      {% endfor %}
+    </ul>
+  </form>
+</body>
+
+</html>
