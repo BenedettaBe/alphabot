@@ -2,14 +2,15 @@ import RPi.GPIO as GPIO
 import time
 
 class AlphaBot(object):
-	
-	def __init__(self,in1=12,in2=13,ena=6,in3=20,in4=21,enb=26):
+	def __init__(self,in1=12,in2=13,ena=6,in3=20,in4=21,enb=26, dr=16, dl=19):
 		self.IN1 = in1
 		self.IN2 = in2
 		self.IN3 = in3
 		self.IN4 = in4
 		self.ENA = ena
 		self.ENB = enb
+		self.DR = dr
+		self.DL = dl
 
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setwarnings(False)
@@ -24,6 +25,9 @@ class AlphaBot(object):
 		self.PWMB = GPIO.PWM(self.ENB,500)
 		self.PWMA.start(50)
 		self.PWMB.start(50)
+
+		GPIO.setup(self.DR,GPIO.IN,GPIO.PUD_UP)
+		GPIO.setup(self.DL,GPIO.IN,GPIO.PUD_UP)
 
 	def forward(self):
 		GPIO.output(self.IN1,GPIO.HIGH)
@@ -78,5 +82,19 @@ class AlphaBot(object):
 			GPIO.output(self.IN3,GPIO.HIGH)
 			GPIO.output(self.IN4,GPIO.LOW)
 			self.PWMB.ChangeDutyCycle(0 - left)
+
+	def sensori(self):
+		DR_status = GPIO.input(self.DR)
+		DL_status = GPIO.input(self.DL)
+		if((DL_status == 1) and (DR_status == 1)):
+			print("entrambi accesi")
+		elif((DL_status == 1) and (DR_status == 0)):
+			print("sinistro acceso")
+		elif((DL_status == 0) and (DR_status == 1)):
+			print("destro acceso")
+		else:
+			print("entrambi spenti")
+		return DR_status, DL_status
+
 
 	

@@ -144,6 +144,21 @@ def movimenti():
             else:
                 print("Unknown")
         return render_template("movimenti.html")
+    
+
+@app.route("/api/sensors/infrared", methods=['GET'])
+def sensors_infrared():
+    #user_token = request.cookies.get("username")
+    #if not user_token:
+     #    return redirect(url_for('login'))
+    #else:
+    DR_status, DL_status = robot.sensori()
+    print("entrato nell'api sensori")
+    print(DR_status, DL_status)
+    return jsonify({"DR": DR_status, "DL": DL_status})
+        #return render_template("movimenti.html", sensori = jsonify({"DR": DR_status, "DL": DL_status}))
+
+        
 
 if __name__ == '__main__':
     app.run(debug=True, host = '0.0.0.0')

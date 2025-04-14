@@ -5,8 +5,6 @@
     <!-- Design by foolishdeveloper.com -->
     <title>Login Tutorial</title>
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
     <!-- Stylesheet -->
     <link rel="stylesheet" type="text/css" href="../static/style.css">
 </head>
@@ -35,7 +33,35 @@
         <div class="control-buttons">
             <input type="submit" value="STOP" name="STOP" class="stop-btn">
         </div>
-    </form>
+    
+
+    <button onclick="visualizzaDati()">Visualizza stati sensori</button>
+
+    <div class="control-buttons" id="risultato"></div>
+    <script>
+        function visualizzaDati() {
+            fetch("/api/sensors/infrared") // aggiunto per evitare cache
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log(data);
+                    const div = document.getElementById("risultato");
+                    div.innerHTML = `<p>DL: ${data.DL}   DR: ${data.DR}</p>`;
+        
+     })
+                .catch(error => {
+                    console.error("Errore nella richiesta:", error);
+                    const div = document.getElementById("risultato");
+                    div.innerHTML = `<p style="color:red;">Errore: ${error.message}</p>`;
+                });
+            }    
+            </script>
+
+</form>
 
 </body>
 
