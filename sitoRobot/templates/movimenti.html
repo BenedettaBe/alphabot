@@ -21,7 +21,7 @@
         <button type="button" class="logout">logout</button>
     </a>
 
-    <form action="/movimenti" method="POST" class="movement-form">
+    <form action="/api/movimenti" method="POST" class="movement-form">
         <div class="control-buttons">
             <input type="submit" value="W" name="W" class="move-btn">
         </div>
@@ -40,7 +40,7 @@
     <div class="control-buttons" id="risultato"></div>
     <script>
         function visualizzaDati() {
-            fetch("/api/sensors/infrared") // aggiunto per evitare cache
+            fetch("/api/v1/sensors/infrared") // aggiunto per evitare cache
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP error ${response.status}`);

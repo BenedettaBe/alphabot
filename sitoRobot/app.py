@@ -119,6 +119,32 @@ def logout():
     return response
 
 
+@app.route("/api/v1/movimenti/<string:move>", methods=['POST', 'GET'])
+def movimentiApi(move):
+    user_token = request.cookies.get("username")
+    if not user_token:
+        return redirect(url_for('login'))
+    else:
+        if request.method == 'GET':
+            if move == 'avanti':
+                print("avanti")
+                robot.forward()
+            elif move == 'S':
+                print("indietro")
+                robot.backward()
+            elif move == 'A':
+                print("sinistra")
+                robot.left()
+            elif move == 'D':
+                print("destra")
+                robot.right()
+            elif move == 'STOP':
+                print("stop")
+                robot.stop()
+            else:
+                print("Unknown")
+        return render_template("movimenti.html")
+    
 @app.route("/movimenti", methods=['POST', 'GET'])
 def movimenti():
     user_token = request.cookies.get("username")
@@ -146,7 +172,7 @@ def movimenti():
         return render_template("movimenti.html")
     
 
-@app.route("/api/sensors/infrared", methods=['GET'])
+@app.route("/api/v1/sensors/infrared", methods=['GET'])
 def sensors_infrared():
     #user_token = request.cookies.get("username")
     #if not user_token:
